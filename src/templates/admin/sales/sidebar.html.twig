@@ -1,0 +1,333 @@
+<!-- Sidebar -->
+<ul class="sidebar navbar-nav toggled">
+    <li class="nav-item {% if nav_link == 'sales' %} active {% endif %}">
+        <a class="nav-link" href="/sales">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>To Do</span>
+        </a>
+    </li>
+    <li class="nav-item {% if nav_link == 'deals' %} active {% endif %}">
+        <a class="nav-link" href="/sales/deals">
+            <i class="fas fa-fw fa-american-sign-language-interpreting"></i>
+            <span>Deals</span>
+        </a>
+    </li>
+    
+    <li class="nav-item {% if nav_link == 'contacts' %} active {% endif %}">
+        <a class="nav-link" href="/sales/contacts">
+            <i class="fas fa-fw fa-phone"></i>
+            <span>Contacts</span>
+        </a>
+    </li>
+    <li class="nav-item {% if nav_link == 'analytics' %} active {% endif %}">
+        <a class="nav-link" href="/sales/analytics">
+            <i class="fas fa-fw fa-chart-line"></i>
+            <span>Analytics</span>
+        </a>
+    </li>
+    <li class="nav-item {% if nav_link == 'add' %} active {% endif %}">
+        <button type="button" class="btn btn-warning add-new-button" class="nav-link" data-toggle="modal" data-target="#add_new_modal">
+            <span data-hover='tooltip' title='Create Contact or Deal or Task'>
+                <!--i class="fas fa-fw fa-plus-square"></i--><b>Create</b></span>
+            </button>
+        </li>
+    </ul>
+    <!-- sidebar end -->
+    <!-- Add New Modal -->
+    <div class="modal fade" id="add_new_modal" tabindex="-1" role="dialog" aria-labelledby="Add New" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="width:100%;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Add New</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul id="tabs_add_forms">
+                        <li>
+                            <a id="tabs_add_forms_tab1" class="text-primary">Deal</a>
+                        </li>
+                        <li>
+                            <a id="tabs_add_forms_tab2" class="text-primary inactive">To do</a>
+                        </li>
+                        <li>
+                            <a id="tabs_add_forms_tab3" class="text-primary inactive">Contact</a>
+                        </li>
+                    </ul>
+                    <!-- deal tab -->
+                    <div class="container_tabs_add_forms" id="tabs_add_forms_tab1C">
+                        <div id="server-results" class="alert alert-danger" role="alert">Fill the
+                            bellow form. Red border means required field. <b>If you don't have any contact, add first.</b></div>
+                            <form action="/sales/deals" method="post" id="frm_add_deal" class="simple-form">
+                                <input type="hidden" name="csrf" id="csrf" value="{{ key }}" />
+                                <input type="hidden" name="stage" id="stage" value="{{ stage }}">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <input data-hover='tooltip' title="Search for contact input few char"  type="text" name="contact_lookup" id="contact_lookup" placeholder="Contact" value="" class="form-control" required >
+                                        <div id="contact" name="contact" class="form-control" style="display:none;"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <input data-hover='tooltip' title="Email" type="text" name="email" id="email" value="" placeholder="Email" class="form-control" required readonly="readonly">
+                                    </div>
+                                    <div class="form-group">
+                                        <input data-hover='tooltip' title="Phone" type="text" name="phone" id="phone" value="" placeholder="Phone" class="form-control" required readonly="readonly">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <input data-hover='tooltip' title="Company" type="text" name="company" id="company" value="" placeholder="Company" class="form-control" readonly="readonly">
+                                    </div>
+                                    <div class="form-group">
+                                        <input data-hover='tooltip' title="Deal name" type="text" name="deal" id="deal" value="" maxlength="200" placeholder="Deal name eg. Logo design" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <input data-hover='tooltip' title="Deal Amount" type="text" name="amount" id="amount" value="" placeholder="Amount eg. 1800" class="form-control" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <input data-hover='tooltip' title="Deal Rating: range 1 to 5" type="number" name="rating" id="rating" min="1" max="5" class="form-control" value="3" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <input data-hover='tooltip' title="Deal details" type="text" name="project_description" id="project_description" value="" placeholder="Deal details eg. Logo design for his new
+                                        website." class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <input data-hover='tooltip' title="What to deliver" type="text" name="deliverables" id="deliverables" value="" maxlength="200" placeholder="Deliverables eg. psd, png and related all
+                                        files of logo in zip format." class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <input data-hover='tooltip' title="Due date" type="text" name="proposal_due_date" id="proposal_due_date" value="{{ now|date('m/d/Y') }}" placeholder="Proposal due date, click
+                                        to select date" class="form-control">
+                                    </div>
+                            <!--div class="form-group">
+                                <select id="owner" name="owner" class="form-control" data-toggle="tooltip" title="Owner" required>
+                                    {% for own in owner %}
+                                    <option value="{{ own.id }}">{{ own.Name_First|title }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div-->
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <input type="submit" class="btn btn-primary" id="deal_submit" value="Add">
+                                <input class="btn btn-secondary" type="reset">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- to do tab -->
+                <div class="container_tabs_add_forms" id="tabs_add_forms_tab2C" style="display: none;">
+                    <div id="server-result_todo" class="alert alert-danger" role="alert">Fill
+                        the bellow form. Red color border means required field.</div>
+                        <form action="/sales/todo" method="post" id="frm_add_todo" name="frm_add_todo" class="simple-form">
+                            <input type="hidden" name="csrf" id="csrf" value="{{ key }}" />
+                            <input type="hidden" name="stage" id="stage" value="{{ stage }}" />
+                            <div class="form-row">
+                                {% set i = 1 %}
+                                    {% for todo_desc in todo_descs %}
+                                        <div class="col-md-3 col-md-offset-3">
+                                            <label class="form-check-label" for="{{
+                                        todo_desc.id }}">{{ todo_desc.description }} </label>
+                                            <input type="checkbox" class="form-check-input" value="{{ todo_desc.id
+                                        }}" name="todo_desc[]" data-toggle="tooltip" title="Choose todo type" {% if i <3 %} checked="checked" {% set i=i + 1 %} {% endif %} class="form-control"> 
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-12">
+                                    <input type="text" name="todo_detail" id="todo_detail" value="" placeholder="Enter todo details" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-4">
+                                    <input type="text" name="todo_due_date" id="todo_due_date" value="{{
+                                    now|date('m/d/Y')}}" data-toggle="tooltip" title="Todo due date, click
+                                    to select date" class="form-control" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="time" name="todo_due_time" id="todo_due_time" value="08:00" data-toggle="tooltip" title="Todo due time, use 24 hours format. eg.
+                                    20:00 for 8PM" class="form-control" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <select data-toggle="tooltip" title="Todo Dureation use time you need, eg.
+                                    00:15 min" name="duration" id="duration" placeholder="Duration:min" class="form-control" required>
+                                        {% for duration in duration_select %}
+                                            <option>{{ duration }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-lg-12">
+                                    <input type="text" class="form-control" name="get_select_deals" id="get_select_deals" placeholder=" Click here to get Deals for To do" readonly="readonly" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-lg-12">
+                                    <select id="deal" name="deal" class="form-control" data-toggle="tooltip" title="Click to select deal" required style="display:none">
+                                        <option value="">Click to select Deals to connect with this to do</option>
+                                    </select>
+                                </div>
+                            <!--div class="col-md-6">
+                                <select id="owner" name="owner" class="form-control" data-toggle="tooltip" title="Owner" required>
+                                    {% for own in owner %}
+                                    <option value="{{ own.id }}">{{ own.Name_First|title }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div-->
+                        </div>
+                        <br>
+                        <div class="form-row">
+                            <div class="col-md-12">
+                                <input type="submit" class="btn btn-primary" id="todo_submit" value="Add">
+                                <input class="btn btn-secondary" type="reset">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- to do tab end -->
+                <!-- contact tab -->
+                <div class="container_tabs_add_forms" id="tabs_add_forms_tab3C" style="display: none;">
+                    <div id="server-results_contact" class="alert alert-danger" role="alert">Red
+                        colour borders are required fields.</div>
+                        <form action="/sales/contacts" method="post" id="frm_add_contact" class="simple-form">
+                            <input type="hidden" name="csrf" id="csrf" value="{{ key }}" />
+                            <input type="hidden" name="stage" id="stage" value="{{ stage }}">
+                            <div class="form-row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <input type="text" name="title" id="title" placeholder="Title" value="" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <input type="text" name="first" id="first" placeholder="First Name" value="" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <input type="text" name="last" id="lsat" placeholder="Last Name" value="" class="form-control" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <input type="text" name="email" id="email" value="" maxlength="200" placeholder="Email" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <input type="text" name="phone" id="phone" value="" maxlength="13" placeholder="Phone" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <input type="text" name="company" id="company" value="" maxlength="50" placeholder="Company" class="form-control" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <input type="text" name="lead_referral_source" id="lead_referral_source" maxlength="100" value="" maxlength="100" placeholder="Lead referral source eg. www.google.com" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <input type="text" name="designation" id="designation" maxlength="50" value="" placeholder="Designation eg. Sales Manager" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <input type="text" name="industry" id="industry" maxlength="50" placeholder="Industry eg. Auto" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <input type="text" name="website" id="website" value="" maxlength="50" placeholder="Website" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <input type="text" name="background" id="background" value="" maxlength="100" placeholder="Background info." class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <input type="text" name="address1" id="address1" value="" maxlength="100" placeholder="Address" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <input type="text" name="street" id="street" value="" maxlength="100" placeholder="Street" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <input type="text" name="city" id="city" value="" maxlength="50" placeholder="City" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <input type="text" name="state" id="state" value="" maxlength="50" placeholder="State" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <input type="number" name="zip" id="zip" value="" min="10000" max="99999999" placeholder="Zip" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <select id="country" name="country" class="form-control" data-toggle="tooltip" title="Country">
+                                            <option value="">Select country</option>';
+                                            {% for country in countries %}
+                                                <option value="{{ country.id }}">{{ country.country_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        <!--div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <select id="owner" name="owner" class="form-control" data-toggle="tooltip" title="Owner" required>
+                                        {% for own in owner %}
+                                        <option value="{{ own.id }}">{{ own.Name_First|title }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div-->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="submit" class="btn btn-primary" id="contact_submit" value="Add">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input class="btn btn-secondary" type="reset">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- modal end -->

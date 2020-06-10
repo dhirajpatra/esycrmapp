@@ -1,0 +1,8 @@
+{% include 'header.html.twig' %}
+
+    <body oncontextmenu="return false">
+    {% include 'nav.html.twig' %}
+        <div id="content">{% block content %}{% endblock %}</div>
+    </body>
+        
+{% include 'footer.html.twig' %}

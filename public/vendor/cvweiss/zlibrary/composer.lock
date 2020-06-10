@@ -1,0 +1,58 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+    ],
+    "hash": "93d9dc6f9ccae28bf38cbeca74a1fe57",
+    "packages": [
+        {
+            "name": "cvweiss/zcache",
+            "version": "v0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cvweiss/zcache.git",
+                "reference": "3dd5dc079eafd239ca2a608c148a6cfc0fad574b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cvweiss/zcache/zipball/3dd5dc079eafd239ca2a608c148a6cfc0fad574b",
+                "reference": "3dd5dc079eafd239ca2a608c148a6cfc0fad574b",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GNU Affero General Public License"
+            ],
+            "authors": [
+                {
+                    "name": "Clinton Weiss",
+                    "email": "cvweiss@gmail.com"
+                }
+            ],
+            "description": "Library of classes to simplify caching",
+            "time": "2014-02-20 16:54:14"
+        }
+    ],
+    "packages-dev": [
+
+    ],
+    "aliases": [
+
+    ],
+    "minimum-stability": "stable",
+    "stability-flags": [
+
+    ],
+    "platform": [
+
+    ],
+    "platform-dev": [
+
+    ]
+}

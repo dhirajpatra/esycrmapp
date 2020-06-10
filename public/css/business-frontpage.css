@@ -1,0 +1,47 @@
+/*!
+ * Start Bootstrap - Busines Frontpage (https://startbootstrap.com/template-overviews/business-frontpage)
+ * Copyright 2013-2019 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-business-frontpage/blob/master/LICENSE)
+ */
+ body {
+ 	padding-top: 56px;
+ 	font-family: Soleil,Arial,Sans-Serif; 
+ 	font-weight: 300;
+    line-height: 1.5;
+    background-color: #fff;
+    color: #003a4e;	
+ }
+
+ .card-img-top {
+ 	width: 253px;
+ 	height: 200px;
+ 	border-radius: 5px;
+ }
+
+ .nav_a {
+ 	padding: 10px;
+ 	color: #003a4e;
+ 	font-weight: 600;
+ }
+
+ .nav_a a:hover { 	
+ 	text-decoration: none;
+ 	background-color: yellow;
+ }
+
+ .top_button {
+ 	float: right;
+ 	margin: 5px;
+ }
+
+ .img-fluid {
+ 	width: 150px;
+ 	height: 150px;
+ }
+
+ .demo-video {
+ 	width: 100%;
+ 	height: auto;
+ 	border: 1px solid gray;
+ }
+

@@ -1,0 +1,17 @@
+
+23-12-2019 19:45:07: PHPMailer Error: PHPMailer\PHPMailer\Exception: SMTP connect() failed. https://github.com/PHPMailer/PHPMailer/wiki/Troubleshooting in /var/www/public/vendor/phpmailer/phpmailer/src/PHPMailer.php:1848
+Stack trace:
+#0 /var/www/public/vendor/phpmailer/phpmailer/src/PHPMailer.php(1589): PHPMailer\PHPMailer\PHPMailer->smtpSend('Date: Mon, 23 D...', '<!DOCTYPE html ...')
+#1 /var/www/public/vendor/phpmailer/phpmailer/src/PHPMailer.php(1423): PHPMailer\PHPMailer\PHPMailer->postSend()
+#2 /var/www/src/admin/inc/PhpMailerCrm.php(56): PHPMailer\PHPMailer\PHPMailer->send()
+#3 /var/www/src/admin/manager/Manager.php(382): App\admin\inc\PhpMailerCrm->smtpmailer(Array, Array, Array, 'You have been i...', '<!DOCTYPE html ...')
+#4 [internal function]: App\admin\manager\Manager->add_salesrep_process(Object(Zend\Diactoros\ServerRequest), Object(Relay\Runner))
+#5 /var/www/vendor/middlewares/utils/src/CallableHandler.php(67): call_user_func_array(Array, Array)
+#6 /var/www/vendor/middlewares/utils/src/CallableHandler.php(47): Middlewares\Utils\CallableHandler->execute(Array)
+#7 /var/www/vendor/middlewares/request-handler/src/RequestHandler.php(92): Middlewares\Utils\CallableHandler->process(Object(Zend\Diactoros\ServerRequest), Object(Relay\Runner))
+#8 /var/www/vendor/relay/relay/src/Runner.php(36): Middlewares\RequestHandler->process(Object(Zend\Diactoros\ServerRequest), Object(Relay\Runner))
+#9 /var/www/vendor/middlewares/fast-route/src/FastRoute.php(69): Relay\Runner->handle(Object(Zend\Diactoros\ServerRequest))
+#10 /var/www/vendor/relay/relay/src/Runner.php(36): Middlewares\FastRoute->process(Object(Zend\Diactoros\ServerRequest), Object(Relay\Runner))
+#11 /var/www/vendor/relay/relay/src/Relay.php(32): Relay\Runner->handle(Object(Zend\Diactoros\ServerRequest))
+#12 /var/www/public/index.php(65): Relay\Relay->handle(Object(Zend\Diactoros\ServerRequest))
+#13 {main}

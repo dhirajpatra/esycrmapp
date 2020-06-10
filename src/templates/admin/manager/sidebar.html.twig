@@ -1,0 +1,68 @@
+<!-- Sidebar -->
+<ul class="sidebar navbar-nav toggled">
+    <li class="nav-item {% if uri == '/manager' %} active {% endif %}">
+        <a class="nav-link" href="/manager">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Analytics</span>
+        </a>
+    </li>
+    <li class="nav-item {% if uri == '/manager/salesrep' %} active {% endif %}">
+        <a class="nav-link" href="/manager/salesrep">
+            <i class="fas fa-users fa-folder"></i>
+            <span>My Sales Reps</span>
+        </a>
+    </li>
+    <li class="nav-item {% if uri == '/manager/salesrep/add' %} active {% endif %}">
+        <a class="nav-link" href="/manager/salesrep/add">
+            <i class="fas fa-user-shield fa-table"></i>
+            <span>Add Sales Rep</span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" id="settings" data-toggle="modal" data-target="#settings_modal">
+                <i class="fas fa-align-justify"></i>
+                <span>Pipeline Settings</span>
+            </a>
+        </li>
+    </ul>
+    <!--  pipeline Modal -->
+    <div class="modal fade" id="settings_modal" tabindex="-1" role="dialog" aria-labelledby="Settings" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Settings - Edit Pipeline</h5>
+                    <button type="button" id="close_button_settings_modal" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div id="server-result_settings" class="alert alert-success" role="alert">You can add edit stages by dragging it to new position</div>
+                        <div class="row">
+                            <div class="form-group" id="stages">
+                                <ul id="sortable_pipeline_stages" class="list-group" >
+                                    {% for stage in stages %}
+                                        <li data="{{ stage.deal_stage }}" class="list-group-item pipeline-stages" id="{{ stage.id }}">{{ stage.deal_stage|title }}<span class="stage-close" id="{{ stage.id }}">x</span>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                        <form method="post" id="frm_settings_add" action="/manager/settings">
+                            <input type="hidden" name="csrf" id="csrf" value="{{ key }}" />
+                            <input type="hidden" name="change" id="change" value="add">
+                            <div class="row">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="new_stage" id="new_stage" value="" minlength="4" maxlength="20" placeholder="Add new stage here" required>
+                                </div>
+                                <div class="form-group">
+                                    &nbsp;
+                                    <input type="submit" class="btn btn-primary btn-sm" value="Add New Stage">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- pipeline modal end -->

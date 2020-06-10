@@ -1,0 +1,303 @@
+{% include 'admin/head.html.twig' %}
+{% include 'admin/menu.html.twig' %}
+<div id="wrapper">
+	{% include 'admin/sales/sidebar.html.twig' %}
+	<div id="content-wrapper">
+		<div
+			class="container-fluid">
+			<!-- Breadcrumbs-->
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<a href="#">My Tasks</a>
+				</li>
+				<li class="breadcrumb-item active">Details</li>
+                <li class="breadcrumb-item"><small>After connect your Gmail. You can send email directly from below table Email col by clicking on <img src="images/gmail-icon-smallest.png"> icon. It will also create power <b>labels</b> with task status at your Gmail to sort and search.</small></li>  
+			</ol>
+			<!-- DataTables Example -->
+			<div class="card mb-3">
+				<div class="card-header">
+					<i class="fas fa-table"></i>
+					Tasks
+				</div>
+				<div class="card-body">
+					<div class="table-responsive">
+						<table class="table table-bordered datatable" id="dataTable4" width="100%" cellspacing="0">
+							<thead>
+								<tr>
+									<th width="10%" data-toggle="tooltip" title="Comments">
+										<i class="far fa-comments"></i>
+									</th>
+									<th width="10%">Contact</th>
+									<th width="10%">Type</th>
+									<th width="15%">Description</th>
+									<th width="15%">Deal</th>
+									<th width="5%">Status</th>
+									<th width="15%">Task Update</th>
+									<th width="10%">Due Date</th>
+									<th width="10%">Action</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for task in tasks %}
+									{% if task.todo_description == "Meeting" %}
+										{% set desc = '<i class="fas fa-handshake"> Meeting</i>' %}
+									{% elseif task.todo_description == "Email" and gmail_service != null %}
+										{% set desc = '<span class="open_task_email_modal" id="open_task_email_modal" data-id="' ~ task.nid ~ '">
+                                        <img src="images/gmail-icon-smallest.png"> <small>Click to send Email</small></span>' %}
+									{% elseif task.todo_description == "Email" and gmail_service == null %}
+										{% set desc = '<i class="fas fa-envelope"> Email</i>' %}
+									{% elseif task.todo_description == "Phone" %}
+										{% set desc = '<i class="fas fa-phone"> Phone</i>' %}
+									{% elseif task.todo_description == "Task" %}
+										{% set desc = '<i class="fas fa-tasks"> Task</i>' %}
+									{% endif %}
+									<tr class="table tr">
+										<td data-hover="tooltip" title="Click to add or get Comments history" data-toggle="modal" data-target="#add_comment" onclick="fill_note_id('{{ task.nid }}', '{{ task.task_status }}');">
+											{% if task.comment_count > 0 %}
+												{{ task.comment_count }}
+											{% else %}
+												<small>Click to add comment</small>
+											{% endif %}
+										</td>
+										<td>{{ task.Contact_First }}
+											{{ task.Contact_Last }}</td>
+										<td>{{ desc|raw }}</td>
+										<td>{{ task.Notes }}</td>
+										<td>{{ task.project_type }}</td>
+										<td class="{% if task.task_status == 'on hold' %}onhold{% else %}{{ task.task_status }}{% endif %}">{{ task.task_status|title }}</td>
+										<td>{{ task.Task_Update }}</td>
+										<td>{{ task.todo_due_date }}</td>
+										<td>
+											<div class="container">
+												<div class="row">
+													{% if task.task_status != 'completed' %}
+														<div class="text-center col-md-2">
+															<span class="sales_task_edit_modal_open" id="sales_task_edit_modal_open" data-id="{{ task.nid }}">
+																<button type="button" class="btn btn-primary">
+																	<i class="fas fa-edit" data-hover="tooltip" title="Edit"></i>
+																</button>
+															</span>
+														</div>
+														<div>&nbsp;</div>
+														<div class="text-center col-md-2">
+															<form method="post" id="frm_data_sales_task_delete" action="/sales/delete_task">
+																<input type="hidden" id="task_id" name="task_id" value="{{ task.nid }}">
+																<button type="submit" class="btn btn-primary">
+																	<i class="fas fa-check" data-toggle="tooltip" title="Completed"></i>
+																</button>
+															</form>
+														</div>
+													{% endif %}
+												</div>
+											</div>
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="card-footer small text-muted">Updated
+					{{ "now"|date("F jS Y \\a\\t g:ia") }}</div>
+			</div>
+		</div>
+		<!-- google adsence -->
+		<div id="advt" class="card-body"></div>
+		<!-- google adsence -->
+		<!-- /.container-fluid -->
+		{% include 'admin/copyright.html.twig' %}
+	</div>
+	<!-- /.content-wrapper -->
+</div>
+<!-- /#wrapper -->
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+	<i class="fas fa-angle-up"></i>
+</a>
+<!-- Add New comment Modal -->
+<div class="modal fade" id="add_comment" tabindex="-1" role="dialog" aria-labelledby="Add New" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLongTitle">Comments For This Note</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body" style="width:160%;">
+				<ul id="tabs_add_comments">
+					<li>
+						<a id="tabs_add_comments_tab1" class="">Add Comment</a>
+					</li>
+					<li>
+						<a id="tabs_add_comments_tab2" class="inactive">Comment History</a>
+					</li>
+				</ul>
+				<!-- add comment tab -->
+				<div class="container_tabs_add_comments" id="tabs_add_comments_tab1C">
+					<div id="server-results_comment" class="alert alert-success" role="alert">Fill the below form. Red border means required field.</div>
+					<form action="/sales/add_comment" method="post" id="frm_add_comment" class="simple-form-padding-left simple-form">
+						<input type="hidden" name="csrf" id="csrf" value="{{ key }}">
+						<input type="hidden" name="note_id" id="note_id" value="">
+						<input type="hidden" name="task_status" id="task_status" value="">
+						<div class="row">
+							<div class="form-group">
+								<input type="text" name="comment" id="comment" maxlength="100" placeholder="Comment" value="" class="form-control" required>
+							</div>
+						</div>
+						<div class="row">
+							<div class="form-group">
+								<input type="submit" class="btn btn-primary" id="add_comment_submit" value="Add">
+								<input class="btn btn-secondary" type="reset">
+							</div>
+						</div>
+					</form>
+				</div>
+				<!-- comments history -->
+				<div class="container_tabs_add_comments" id="tabs_add_comments_tab2C" style="display: none;">
+					<div id="server-result_comment_edit" class="alert" role="alert"></div>
+					<div class="row"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- add new comment modal end -->
+<!-- to do edit modal -->
+<div class="modal fade" id="edit_task_modal" tabindex="-1" role="dialog" aria-labelledby="Task Edit" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLongTitle">Edit Task [Todo]</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="container_tabs_add_forms" id="tabs_add_forms_tab2C">
+					<div id="server-result_todo_edit" class="alert alert-success" role="alert">Fill
+												                        the below form</div>
+					<form action="/sales/edit_task" method="post" name="frm_edit_task" id="frm_edit_task" class="simple-form">
+						<input type="hidden" name="csrf" id="csrf" value="{{ key }}"/>
+						<input type="hidden" name="task_edit_id" id="task_edit_id" value=""/>
+						<input type="hidden" name="existing_data" id="existing_data" value=""/>
+						<div class="form-row">
+							{% set i = 1 %}
+							{% for todo_desc in todo_descs %}
+								<div class="col-md-3 col-md-offset-2">
+									<label class="form-check-label" for="{{ todo_desc.id }}">{{ todo_desc.description }}
+									</label>
+									<input type="checkbox" class="form-check-input" id="todo_desc_{{ todo_desc.id
+																				                                                                }}" value="{{ todo_desc.id }}" name="todo_desc[]" data-toggle="tooltip" title="Choose todo type" class="form-control" disabled="disabled">
+								</div>
+							{% endfor %}
+						</div>
+						<div class="form-row">
+							<div class="col-md-12">
+								<input type="text" name="todo_detail" id="todo_detail" value="" placeholder="Enter todo details" class="form-control" data-hover="tooltip" title="Todo Details" readonly="readonly">
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="col-md-4">
+								<select name="todo_status" id="todo_status" class="form-control" data-hover="tooltip" title="Task Status" required>
+									{% for status in all_task_status %}
+										<option value="{{ status.id }}">{{ status.status|capitalize }}</option>
+									{% endfor %}
+								</select>
+							</div>
+							<div class="col-md-8">
+								<input type="text" name="task_update" id="task_update" value="" placeholder="Enter task update" class="form-control" data-hover="tooltip" title="Task Update" required>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="col-md-4">
+								<input type="text" name="todo_due_date_edit" id="todo_due_date_edit" value="{{ todo_desc.due_date|date('d/m/Y')}}" data-toggle="tooltip" title="Todo due date, click
+																		                                                        to select date" class="form-control" required>
+							</div>
+							<div class="col-md-4">
+								<input type="time" name="todo_due_time" id="todo_due_time" data-toggle="tooltip" title="Todo due time, use 24 hours format. eg.
+																		                                                        20:00 for 8PM" class="form-control" value="{{ todo_desc.start_time }}" required>
+							</div>
+							<div class="col-md-4">
+								<select name="duration" id="duration" placeholder="Duration:min" class="form-control" data-hover="tooltip" title="Duration" required>
+									{% for duration in duration_select %}
+										{% if duration == todo_desc.duration %}
+											<option selected="selected">{{ todo_desc.duration }}</option>
+										{% endif %}
+										<option>{{ duration }}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="col-md-6">
+								<select id="deal" name="deal" class="form-control" data-toggle="tooltip" title="Select Deal to connect with this todo" required>
+									{% for deal in deals %}
+										<option value="{{ deal.id }}">{{ deal.project_type }}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="col-md-12">
+								<input type="submit" class="btn btn-primary" name="todo_update_submit" id="todo_update_submit" value="Update">
+								<input class="btn btn-secondary" type="reset">
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- to do modal end -->
+
+<!-- send email -->
+<div class="modal fade" id="send_task_email_modal" tabindex="-1" role="dialog" aria-labelledby="Send Task Email" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLongTitle">Send Email & Mark Label</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="container_tabs_add_forms" id="tabs_add_forms_tab2C">
+					<div id="server-result_send_email" class="alert alert-warning" role="alert">Send by your Gmail without living your task update</div>
+					<form action="/sales/send_task_email" method="post" name="frm_send_task_email" id="frm_send_task_email" class="simple-form">
+						<input type="hidden" name="csrf" id="csrf" value="{{ key }}"/>
+						<input type="hidden" name="email_task_id" id="email_task_id" value=""/>
+						<div class="form-row">
+							<div class="col-md-12">
+								<input type="text" name="task_email_to" id="task_email_to" placeholder="To" class="form-control" required>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="col-md-12">
+								<input type="text" name="task_email_subject" id="task_email_subject" placeholder="Subject" class="form-control" required>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="col-md-12">
+								<textarea name="task_email_body" id="task_email_body" rows="6" placeholder="Body" class="form-control" required></textarea>
+								<!-- creating a CKEditor instance called myeditor -->
+								<script type="text/javascript">
+									CKEDITOR.replace('task_email_body');
+								</script>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="col-md-12">
+								<input type="submit" class="btn btn-primary" name="send_task_email_submit" id="send_task_email_submit" value="Send">
+                                <input type="reset" class="btn btn-secondary" value="Reset">
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- send email -->
+{% include 'admin/footer.html.twig' %}

@@ -1,0 +1,94 @@
+{% include 'admin/head.html.twig' %}
+
+{# {% javascripts
+        'js/ckeditor5/ckeditor.js'
+
+        filter='?uglifyjs2'
+%} #}
+
+{% include 'admin/menu.html.twig' %}
+
+<div id="wrapper">
+
+    {% include 'admin/super/sidebar.html.twig' %}
+
+    <div id="content-wrapper">
+
+      <div class="container-fluid">
+
+        <!-- Breadcrumbs-->
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="#">Mails</a>
+          </li>
+          <li class="breadcrumb-item active">Details</li>
+        </ol>
+
+    <!-- DataTables Example -->
+    <div class="card mb-3">
+          <div class="card-header">
+            <i class="fas fa-table"></i>
+            All mail templetes  
+            </div>
+            <div id="super_company_result" class="alert"></div>
+          <div class="card-body">
+            <div class="table-responsive"> 
+            <table class="table datatable" id="dataTable1" width="100%" cellspacing="0">
+        <thead>
+            <tr> 
+                <th width="10%">Subject</th>
+                <th width="10%">Module</th>
+                <th width="70%">Body</th>                
+                <th width="10%">Action</th>
+            </tr>
+            </thead>                        
+            <tbody>             
+
+            {% for row in result %}     
+              <form method="post" class="frm_super_mail_update" name="frm_super_mail_update_{{ row.id }}" id="frm_super_mail_update_{{ row.id }}" action="/manager/super/update_mail">
+              <input type="hidden" id="csrf" name="csrf" value="{{ key }}">
+              <input type="hidden" id="id" name="id" value="{{ row.id }}">
+              <input type="hidden" id="current_body" name="current_body" value="{{ row.body }}">
+              <tr class="table-white tr">
+                <td>{{ row.subject }}</td>
+                <td>{{ row.module }}</td>
+                <td>
+                  <!-- creating a text area for my editor in the form -->
+                  <textarea id="body_{{ row.id }}" name="body_{{ row.id }}">{{ row.body }}</textarea>
+
+                  <!-- creating a CKEditor instance called myeditor -->
+                  <script type="text/javascript">
+                      CKEDITOR.replace('body_{{ row.id }}');
+                  </script>
+                </td>              
+                <td>                   
+                      <button type="submit" class="btn btn-primary"><i class="fas fa-edit" data-toggle="tooltip" title="Edit"></i></button>                           
+                </td>
+              </tr>
+              </form>   
+          {% endfor %}
+                
+                </tbody>
+        </table>
+            </div>
+          </div>
+          <div class="card-footer small text-muted">Updated {{ "now"|date("F jS Y \\a\\t g:ia") }}</div>
+        </div>
+
+      </div>
+      <!-- /.container-fluid -->
+
+      {% include 'admin/copyright.html.twig' %}
+
+    </div>
+    <!-- /.content-wrapper -->
+
+  </div>
+  <!-- /#wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+{% include 'admin/footer.html.twig' %}

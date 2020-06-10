@@ -1,0 +1,239 @@
+<!-- Nav bar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <a class="navbar-brand mr-1" href="https://esycrm.com"> EsyCRM </a>
+    <button class="navbar-toggler" id="sidebarToggle" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/sales/deals">Deals
+                    <span class="badge badge-warning" data-toggle="tooltip" title="Total active deals">
+                        {% if header_totals != empty %}
+                        {{ header_totals.deals }}
+                        {% else %}
+                        {{ session_user.header_totals.deals }}
+                        {% endif %}
+                    </span>
+                </a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="/sales">Tasks
+                    <span class="badge badge-warning" data-toggle="tooltip" title="Total active deals">
+                        {% if header_totals != empty %}
+                        {{ header_totals.tasks }}
+                        {% else %}
+                        {{ session_user.header_totals.tasks }}
+                        {% endif %}
+                    </span>
+                </a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="/sales/contacts">Contacts
+                    <span class="badge badge-warning" data-toggle="tooltip" title="Total active deals">
+                        {% if header_totals != empty %}
+                        {{ header_totals.contacts }}
+                        {% else %}
+                        {{ session_user.header_totals.contacts }}
+                        {% endif %}
+                    </span>
+                </a>
+            </li>
+            {% if session_user.role_id != 3 %}
+            <li class="nav-item active">
+                <a class="nav-link" href="#" id="contacts_csv" data-toggle="modal" data-target="#contacts_csv_modal">Contacts Upload </a>
+            </li>
+            {% if header_totals != empty and header_totals.tasks_google > 0 %}
+            <li class="nav-item active">
+                <a class="nav-link" href="{{ google_auth_url }}" id="google_calendar">Connect <img src="/images/Google-Calendar-icon-small2.png"></a>
+            </li>
+                {% if gmail_auth_url != '' %}
+                <li class="nav-item active">                
+                    <a class="nav-link" href="{{ gmail_auth_url }}" id="gmail">Connect <img src="/images/gmail-icon-small.png"></a>                
+                </li>
+                {% endif %}
+            {% endif %}
+            {% endif %}
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    My Profile & Admin Panels
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <h3 class="text-center"><i class="fa fa-user" aria-hidden="true"> {{ session_user.first_name }} {{ session_user.last_name }} </i></h3>
+                    {% if admin_to_go %}
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{ link }}"><b>{{ admin_to_go }}</b></a>
+                    {% endif %}
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#referralModal">Referral Code</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#login_with_codeModal">Update Login with Code</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#change_passwordModal">Change Password</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">Logout</a>
+                </div>
+            </li>
+            
+            <li class="nav-item active">
+                <!-- Search form -->
+                <div id="search" class="ui search">
+                    <div class="ui icon input">
+                        <input class="prompt" type="text" placeholder="Search...">
+                        <i class="search icon"></i>
+                    </div>
+                    <div class="results"></div>
+            </li>            
+        </ul>
+    </div>
+</nav>
+<!-- nav bar -- >
+    <!-- Wrapping element for toast notification -->
+<div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center" style="height: auto;" id="notification"></div>
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Logout" below if you are ready to end your current session.<br> Otherwise you can <b>continue logged in</b> by just close this tab of the browser. So you need not to login next time.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="/logout?token={{ user_token }}">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Contacts CSV bulk upload Modal and form -->
+<div class="modal fade" id="contacts_csv_modal" tabindex="-2" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Contacts - Bulk import by CSV</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <div id="contacts_csv_upload_response" class="alert alert-warning" role="alert">Only .csv file can be uploaded max 500KB and 1000 [or as per your limit] contacts. <b>First name, Last name, Email and Phone are mandatory column.</b> All other columns are optional for now, later you can update.<br>
+                            <a href="/contacts_csv_example.csv" download="/contacts_csv_example.csv">Download example</a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form class="simple-form" action="/sales/contacts_csv_upload" method="post" name="frm_csv_import" class="simple-form" id="frm_csv_import" enctype="multipart/form-data">
+                            <input type="hidden" name="csrf" id="csrf" value="{{ key }}" />
+                            <div class="form-group">
+                                <div class="form-row">
+                                    <div class="col-md-8">
+                                        <input type="file" class="file-upload" placeholder="Choose csv file" name="csv_import" id="csv_import" accept=".csv">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="submit" name="contacts_csv_upload_submit" id="contacts_csv_upload_submit" class="btn btn-primary " value=" Import">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!-- Referral Modal-->
+<div class="modal fade" id="referralModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Your Referral Code:</h5>
+                <h2>{{ session_user.referral_code }}</h2>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Share your referral code to any body to register to EsyCRM. He will get double deals, contacts. You will also get the same and will be added to your existing limt.</div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Change Password Modal-->
+<div class="modal fade" id="change_passwordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Change Password</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="frm_change_password" class="validatedForm simple-form" action="/sales/change_password" method="post">
+                <input type="hidden" name="csrf" id="csrf" value="{{ key }}" />
+                <div class="modal-body">
+                    <div id="server-results_change_password" class="alert alert-warning" role="alert">Red border means required field.</div>
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <input type="password" id="inputPassword" name="inputPassword" class="form-control" placeholder="Password" required="required">
+                            </div>
+                            <div class="col-md-6">
+                                <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="Confirm password" required="required">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-12">
+                                <input type="submit" id="change_password_Button" class="btn btn-primary btn-block" value="Update Password">
+                            </div>
+                        </div>
+                    </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- Update Login with Code Modal-->
+<div class="modal fade" id="login_with_codeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Update Login with Code - 2FA</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="frm_login_with_code" class="validatedForm simple-form" action="/sales/update_login_with_code" method="post">
+                <input type="hidden" name="csrf" id="csrf" value="{{ key }}" />
+                <div class="modal-body">
+                    <div id="server-results_login_with_code" class="alert alert-warning" role="alert">If checked, at the time of login we will send a verification code. Which you need to enter along with username and password.</div>
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-12">
+                                <input type="checkbox" id="login_with_code" name="login_with_code" class="" required {% if login_with_code == 1 %} checked {% endif %}>Login with Code [2FA]                                    
+                            </div> 
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-12">
+                                <input type="submit" id="update_login_with_code" class="btn btn-primary btn-block" value="Update Login with Code">
+                            </div>
+                        </div>
+                    </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+        </div>
+    </div>
+</div>
+</div>

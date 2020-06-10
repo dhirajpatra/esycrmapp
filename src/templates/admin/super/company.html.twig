@@ -1,0 +1,98 @@
+{% include 'admin/head.html.twig' %}
+
+{% include 'admin/menu.html.twig' %}
+
+<div id="wrapper">
+
+    {% include 'admin/super/sidebar.html.twig' %}
+
+    <div id="content-wrapper">
+
+      <div class="container-fluid">
+
+        <!-- Breadcrumbs-->
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="#">Companies</a>
+          </li>
+          <li class="breadcrumb-item active">Details</li>
+        </ol>
+
+    <!-- DataTables Example -->
+    <div class="card mb-3">
+          <div class="card-header">
+            <i class="fas fa-table"></i>
+            Companies along with their conunts  Total: <b>{{ total }}</b>
+            </div>     
+            
+            <div id="super_company_result" class="alert"></div>
+          <div class="card-body">
+            <div class="table-responsive"> 
+            <table class="table datatable" id="dataTable1" width="100%" cellspacing="0">
+        <thead>
+            <tr> 
+                <th>ID</th>
+                <th>Status</th>
+                <th>Company</th>
+                <th>Name</th>
+                <th>Email</th>                
+                <th>#Sales Rep</th>
+                <th>#Contacts</th>
+                <th>#Deals</th>
+                <th>Created</th>
+                <th>Last Login</th>
+            </tr>
+            </thead>                        
+            <tbody>             
+
+            {% for row in result %}     
+        
+            <tr class="table-white tr">
+              <td>{{ row.uid }}</td>
+              <td>
+                <form method="post" name="frm_super_company_status_update" id="frm_super_company_status_update" action="/manager/super/status_update_company">
+                    <input type="hidden" id="csrf" name="csrf" value="{{ key }}">
+                    <input type="hidden" id="registration_id" name="registration_id" value="{{ row.rid }}">
+                    <input type="hidden" id="company_name" name="company_name" value="{{ row.company_name }}">
+                    <input type="hidden" id="Name_First" name="Name_First" value="{{ row.Name_First }}">
+                    <input type="hidden" id="Name_Last" name="Name_Last" value="{{ row.Name_Last }}">
+                    <input type="hidden" id="Email" name="Email" value="{{ row.Email }}">
+                    <input type="hidden" id="status" name="status" value="{{ row.User_Status }}">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-{% if row.User_Status == 1 %}check{% else %}ban{% endif %}" data-toggle="tooltip" title="Action to Activae or Deactivate"></i></button>
+                </form>              
+              </td>
+              <td>{{ row.company_name }}</td>
+              <td>{{ row.Name_First }} {{ row.Name_Last }} </td>
+              <td>{{ row.Email }}</td>              
+              <td>{{ row.total_sales_rep }}</td>
+              <td>{{ row.contacts }}</td>
+              <td>{{ row.deals }}</td>
+              <td>{{ row.created_at }}</td>
+              <td>{{ row.last_logged_in }} {% if row.more_than_one_month_ago == true %}<i class="fas fa-thumbs-down" aria-hidden="true"></i>{% else %}<i class="fas fa-thumbs-up" aria-hidden="true"></i>{% endif %}</td>
+            </tr>
+    {% endfor %}
+                
+                </tbody>
+        </table>
+            </div>
+          </div>
+          <div class="card-footer small text-muted">Updated {{ "now"|date("F jS Y \\a\\t g:ia") }}</div>
+        </div>
+
+      </div>
+      <!-- /.container-fluid -->
+
+      {% include 'admin/copyright.html.twig' %}
+
+    </div>
+    <!-- /.content-wrapper -->
+
+  </div>
+  <!-- /#wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+{% include 'admin/footer.html.twig' %}

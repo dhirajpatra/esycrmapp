@@ -1,0 +1,20 @@
+{
+    "name": "cvweiss/zcache",
+    "description": "Library of classes to simplify caching",
+    "license": "Unlicense",
+    "authors": [
+        {
+            "name": "Clinton Weiss",
+            "email": "cvweiss@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+
+    },
+    "autoload": {
+        "psr-0" : {
+            "" : "src"
+        }
+    }
+}

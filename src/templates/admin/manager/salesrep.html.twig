@@ -1,0 +1,82 @@
+{% include 'admin/head.html.twig' %}
+{% include 'admin/menu.html.twig' %}
+<div id="wrapper">
+    {% include 'admin/manager/sidebar.html.twig' %}
+    <div id="content-wrapper">
+        <div class="container-fluid">
+            <!-- Breadcrumbs-->
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">Sales Representatives</a>
+                </li>
+                <li class="breadcrumb-item active">Details</li>
+            </ol>
+            <!-- DataTables Example -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fas fa-table"></i>
+                    Sales Representatives Along With Their Contacts</div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        {% for row in result %}
+                        <table class="table table-bordered" id="dataTable_manager1" width="100%" cellspacing="0">
+                            <thead>
+                                <tr class="table-dark">
+                                    <th width="50%">Representative Name</th>
+                                    <th width="50%">Representative Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="table-blue tr ">
+                                    <td>{{ row.user.Name_First }} {{ row.user.Name_Last }} {% if row.user.Email == session_user.email %} <b>[ myself ]</b> {% endif %}</td>
+                                    <td>{{ row.user.Email }}</td>
+                                </tr>
+                                {% if row.contacts is not empty %}
+                                <table class="table table-bordered datatable" id="dataTable_manager_{{ row.user.uid }}" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Contact</th>
+                                            <th>Company</th>
+                                            <th>Industry</th>
+                                            <th>Source</th>
+                                            <th>Tot. Budget</th>
+                                            <th>H. Rating</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for contact in row.contacts %}
+                                        <tr>
+                                            <td>{{ contact.Contact_First }} {{ row.contacts.Contact_Last }}</td>
+                                            <td>{{ contact.Title }} : {{ row.contacts.Company }}</td>
+                                            <td>{{ contact.Industry }}</td>
+                                            <td>{{ contact.Lead_Referral_Source }}</td>
+                                            <td>{{ contact.total_budget }}</td>
+                                            <td>{{ contact.rating }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="card-footer small text-muted">Updated {{ "now"|date("F jS Y \\a\\t g:ia") }}</div>
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+        {% include 'admin/copyright.html.twig' %}
+    </div>
+    <!-- /.content-wrapper -->
+</div>
+<!-- google adsence -->
+<div id="advt" class="card-body">
+</div>
+<!-- google adsence -->
+<!-- /#wrapper -->
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+{% include 'admin/footer.html.twig' %}

@@ -1,0 +1,250 @@
+{% include 'admin/head.html.twig' %}
+{% include 'admin/menu.html.twig' %}
+<div id="wrapper">
+    {% include 'admin/sales/sidebar.html.twig' %}
+    <div id="content-wrapper">
+        <div class="container-fluid">
+            <!-- Breadcrumbs-->
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">Contacts</a>
+                </li>
+                <li class="breadcrumb-item active">[ You can add <b>{{ limits.contacts_limit - header_totals.contacts }}</b> more Contacts as per your current limit. But you can increase it by using <a href="#" data-toggle="modal" data-target="#referral_help_modal">Referral Code</a>. ]</li>
+            </ol>
+            <!-- DataTables Example -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fas fa-table"></i>
+                    Contacts</div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered datatable" id="dataTable5" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Contact</th>
+                                    <th>Company</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                    <th>Website</th>
+                                    <th>Date of initial contact</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for contact in contacts %}
+                                <tr class="table tr">
+                                    <td>{{ contact.Contact_First }} {{ contact.Contact_Last }}</td>
+                                    <td>{{ contact.Company }}</td>
+                                    <td><a href="tel:+{{ contact.Phone }}" target="_blank" data-hover="tooltip" title="Click to call">{{ contact.Phone }}</a></td>
+                                    <td><a href="mailto:{{ contact.Email }}" target="_blank" data-hover="tooltip" title="Click to send mail">{{ contact.Email }}</a></td>
+                                    <td>{{ contact.Website }}</td>
+                                    <td>{{ contact.Date_of_Initial_Contact }}</td>
+                                    <td>
+                                        <div class="row edit-row">
+                                            <div class="text-center col-md-2">
+                                                <span class="edit-span" id="sales_contact_edit_submit">
+                                                    <form>
+                                                        <button type="button" class="btn btn-primary" onclick="fill_edit_contact_form({{ contact|json_encode() }});" data-toggle="modal" data-target="#edit_contact_modal"><i class="fas fa-edit" data-toggle="tooltip" title="Edit"></i></button>
+                                                    </form>
+                                                </span>
+                                            </div>
+                                            <div class="text-center col-md-2">
+                                                <span class="edit-span">
+                                                    <form method="post" name="frm_data_contact_delete" id="frm_data_contact_delete" action="/sales/contact">
+                                                        <input type="hidden" name="csrf_contact_edit" id="csrf_contact_edit" value="{{ key }}" />
+                                                        <input type="hidden" id="edit_contact_id" name="edit_contact_id" value="{{ contact.id }}">
+                                                        <input type="hidden" id="edit_contact_address_id" name="edit_contact_address_id" value="{{ contact.Address_Id }}">
+                                                        <input type="hidden" id="edit" name="edit" value="delete">
+                                                        <button type="submit" class="btn btn-primary"><i class="fa fa-eye-slash" data-toggle="tooltip" title="Hide"></i></button>
+                                                    </form>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer small text-muted">Updated
+                    {{ "now"|date("F jS Y \\a\\t g:ia") }}</div>
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+        <!-- google adsence -->
+        <div id="advt" class="card-body">
+            
+        </div>
+        <!-- google adsence -->
+    </div>
+    <!-- /.content-wrapper -->
+</div>
+<!-- /#wrapper -->
+{% include 'admin/copyright.html.twig' %}
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+<!-- Edit Contact Modal -->
+<div class="modal fade" id="edit_contact_modal" tabindex="-1" role="dialog" aria-labelledby="Edit Contact" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="edit_deal_exampleModalLongTitle">Edit Contact</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container_tabs_add_forms">
+                    <div id="server-results_edit_contact" class="alert alert-success" role="alert">Red
+                        colour borders are required fields.</div>
+                    <form action="/sales/contact" method="post" id="frm_edit_contact" class="simple-form">
+                        <input type="hidden" name="csrf_contact_edit" id="csrf_contact_edit" value="{{ key }}" />
+                        <input type="hidden" id="edit_contact_id" name="edit_contact_id" value="">
+                        <input type="hidden" id="edit_contact_address_id" name="edit_contact_address_id" value="">
+                        <input type="hidden" id="edit_contact_original_values" name="edit_contact_original_values" value="">
+                        <input type="hidden" id="edit" name="edit" value="update">
+                        <div class="form-row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <input type="text" name="title" id="title" placeholder="Title" value="" class="form-control" data-hover='tooltip' title="Title">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <input type="text" name="first" id="first" placeholder="First Name" value="" class="form-control" required data-hover='tooltip' title="First Name">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <input type="text" name="last" id="last" placeholder="Last Name" value="" class="form-control" required data-hover='tooltip' title="Last Name">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <input type="text" name="email" id="email" value="" maxlength="200" placeholder="Email" class="form-control" required data-hover='tooltip' title="Email">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <input type="text" name="phone" id="phone" value="" maxlength="13" placeholder="Phone" class="form-control" required data-hover='tooltip' title="Phone">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <input type="text" name="company" id="company" value="" maxlength="50" placeholder="Company" class="form-control" required data-hover='tooltip' title="Company">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <input type="text" name="lead_referral_source" id="lead_referral_source" maxlength="100" value="" maxlength="100" placeholder="Lead referral source eg. www.google.com" class="form-control" data-hover='tooltip' title="Lead referral source eg. www.google.com">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <input type="text" name="designation" id="designation" maxlength="50" value="" placeholder="Designation eg. Sales Manager" class="form-control" data-hover='tooltip' title="Designation">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <input type="text" name="industry" id="industry" maxlength="50" placeholder="Industry eg. Auto" class="form-control" data-hover='tooltip' title="Industry">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <input type="text" name="website" id="website" value="" maxlength="50" placeholder="Website" class="form-control" data-hover='tooltip' title="Website">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <input type="text" name="background" id="background" value="" maxlength="100" placeholder="Background info." class="form-control" data-hover='tooltip' title="Background">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <input type="text" name="address1" id="address1" value="" maxlength="100" placeholder="Address" class="form-control" data-hover='tooltip' title="Address">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <input type="text" name="street" id="street" value="" maxlength="100" placeholder="Street" class="form-control" data-hover='tooltip' title="Street">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <input type="text" name="city" id="city" value="" maxlength="50" placeholder="City" class="form-control" data-hover='tooltip' title="City">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <input type="text" name="state" id="state" value="" maxlength="50" placeholder="State" class="form-control" data-hover='tooltip' title="State">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <input type="number" name="zip" id="zip" value="" min="10000" max="99999999" placeholder="Zip" class="form-control" data-hover='tooltip' title="Zip">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <select id="country" name="country" class="form-control" data-toggle="tooltip" title="Country" data-hover='tooltip' title="Country">
+                                        <option value="">Select country</option>';
+                                        {% for country in countries %}
+                                        <option value="{{ country.id }}">{{ country.country_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="submit" class="btn btn-primary" id="deal_submit" value="Update">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input class="btn btn-secondary" type="reset">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!-- modal end -->
+
+<!-- Referral Modal pop up when select any deal move as won -->
+<div class="modal fade" id="referral_help_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Referral system
+                    <i class="fa fa-user-plus" aria-hidden="true"></i>
+                </h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">You just share your Referral Code to your friends. Each person register to EsyCRM both of you will get additional number of Deals and Contacts.<br>
+            Referral Code: Click on My Profile & Admin Panel, you will get your unique Referral Code. Which you need to share to your friends which they will use time of Sign Up for EsyCRM. Have a nice day.</div>            
+        </div>
+    </div>
+</div>
+<!-- modal end -->
+{% include 'admin/footer.html.twig' %}

@@ -1,0 +1,88 @@
+<!-- Sidebar -->
+<ul class="sidebar navbar-nav toggled">
+    <li class="nav-item {% if uri == '/manager/super' %} active {% endif %}">
+        <a class="nav-link" href="/manager/super">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Analytics</span>
+        </a>
+    </li>
+    <li class="nav-item {% if uri == '/manager/super/companies' %} active {% endif %}">
+        <a class="nav-link" href="/manager/super/companies">
+            <i class="fas fa-address-card" area-hidden="true"></i>
+            <span>Companies</span>
+        </a>
+    </li>
+    <li class="nav-item {% if uri == '/manager/super/mails' %} active {% endif %}">
+        <a class="nav-link" href="/manager/super/mails">
+            <i class="fas fa-reply" aria-hidden="true"></i>
+            <span>Mails</span></a>
+    </li>
+    <li class="nav-item {% if uri == '/manager/super/mail' %} active {% endif %}">
+        <a href="#" class="nav-link" data-toggle="modal" data-target="#add_mail_modal">
+            <i class="fas fa-envelope-square" aria-hidden="true"></i>
+            <span>Add Mail</span></a>
+    </li>
+    <li class="nav-item {% if uri == '/manager/super/bulk/mails' %} active {% endif %}">
+        <a class="nav-link" href="/manager/super/bulk/mails">
+            <i class="fas fa-mail-bulk" aria-hidden="true"></i>
+            <span>Bulk Mail</span></a>
+    </li>
+    <li class="nav-item {% if uri == '/manager/super/support' %} active {% endif %}">
+        <a class="nav-link" href="/manager/super/support">
+            <i class="fas fa-life-ring" aria-hidden="true"></i>
+            <span>Support</span></a>
+    </li>
+    <li class="nav-item {% if uri == '/manager/super/cache' %} active {% endif %}">
+        <a class="nav-link" href="/manager/super/cache">
+            <i class="fas fa-life-ring" aria-hidden="true"></i>
+            <span>Cache Clean</span></a>
+    </li>
+</ul>
+<!--  add mail Modal -->
+<div class="modal fade" id="add_mail_modal" tabindex="-1" role="dialog" aria-labelledby="Add mail" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="width:100%;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Add Mail Module</h5>
+                <button type="button" id="close_button_settings_modal" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div id="server-result_settings" class="alert alert-success" role="alert">Fill the form</div>
+                    <form method="post" id="frm_add_mail_module" action="/manager/super/mail">
+                        <input type="hidden" name="csrf" id="csrf" value="{{ key }}" />
+                        <div class="row">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="subject" id="subject" value="" minlength="4" maxlength="100" placeholder="Subject" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="module" id="module" value="" minlength="4" maxlength="100" placeholder="Module" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <!-- creating a text area for my editor in the form -->
+                                <textarea id="body" name="body"></textarea>
+                                <!-- creating a CKEditor instance called myeditor -->
+                                <script type="text/javascript">
+                                CKEDITOR.replace('body');
+                                </script>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                &nbsp;
+                                <input type="submit" class="primary-button" value="Submit">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- add mail modal end -->

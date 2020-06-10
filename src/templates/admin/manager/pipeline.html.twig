@@ -1,0 +1,302 @@
+{% include 'admin/head.html.twig' %}
+{% include 'admin/menu.html.twig' %}
+<div id="wrapper">
+    {% include 'admin/manager/sidebar.html.twig' %}
+    <div id="content-wrapper">
+        <div class="container-fluid">
+            <!-- Breadcrumbs-->
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">Analytics</a>
+                </li>
+                <li class="breadcrumb-item active">Overview</li>
+                <li class="row">
+                    <form action="/manager/analytics" method="post" id="frm_manager_analytics" class="form-inline inline-form">
+                        <input type="hidden" name="csrf" id="csrf" value="{{ key }}" />
+                        <div class="row form-control-sm">
+                            <div class="input-group-sm">
+                                <input type="text" name="manager_analytics_from" id="manager_analytics_from" value="{{ now|date_modify("-1 month")|date('m/d/Y') }}" placeholder="From, click to select date" class="form-control form-control-sm" data-hover="Tooltip" title="Date From">
+                            </div>
+                            <div class="input-group-sm">
+                                <input type="text" name="manager_analytics_to" id="manager_analytics_to" value="{{ now|date('m/d/Y') }}" placeholder="To, click to select date" class="form-control form-control-sm" data-hover="Tooltip" title="Date Up To">
+                            </div>
+                            <div class="input-group-sm">
+                                <input type="submit" class="btn btn-primary btn-sm" id="manager_analytics_submit" value="Submit">
+                            </div>
+                        </div>
+                    </form>
+                </li>
+            </ol>
+            <br clear="all">
+            <!-- Icon Cards-->
+            <div class="row">
+                <div class="col-xl-3 col-sm-6 mb-3">
+                    <div class="card text-white bg-primary o-hidden h-100">
+                        <div class="card-body">
+                            <div class="card-body-icon">
+                                <i class="fas fa-fw fa-handshake"></i>
+                            </div>
+                            <div class="mr-5">{% if no_of_active_deals > 0 %}
+                                {{ no_of_active_deals }}
+                                {% else %}
+                                No
+                                {% endif %}
+                                Active Deals!</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 mb-3">
+                    <div class="card text-white bg-warning o-hidden h-100">
+                        <div class="card-body">
+                            <div class="card-body-icon">
+                                <i class="fas fa-fw fa-tasks"></i>
+                            </div>
+                            <div class="mr-5">{% if no_of_tasks_to_do > 0 %}
+                                {{ no_of_tasks_to_do }}
+                                {% else %}
+                                No
+                                {% endif %}
+                                Tasks To do!</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 mb-3">
+                    <div class="card text-white bg-success o-hidden h-100">
+                        <div class="card-body">
+                            <div class="card-body-icon">
+                                <i class="fas fa-fw fa-hand-holding-usd"></i>
+                            </div>
+                            <div class="mr-5">{% if no_of_won_deals > 0 %}
+                                {{ no_of_won_deals }}
+                                {% else %}
+                                No
+                                {% endif %}
+                                Deals Own!</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 mb-3">
+                    <div class="card text-white bg-danger o-hidden h-100">
+                        <div class="card-body">
+                            <div class="card-body-icon">
+                                <i class="fas fa-fw fa-id-card"></i>
+                            </div>
+                            <div class="mr-5">{% if no_of_contacts > 0 %}
+                                {{ no_of_contacts }}
+                                {% else %}
+                                No
+                                {% endif %}
+                                New Contacts!</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Area Chart Example-->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fas fa-chart-area"></i>
+                    Deals Made In This Date Range</div>
+                <div class="card-body">
+                    <canvas id="myAreaChartManager" width="100%" height="30"></canvas>
+                    <hr>
+                    <br>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="analytics-card-body">
+                                        <h5 class="card-title">Aded Deals</h5>
+                                        <p class="card-text text-primary">{{ no_of_active_deals }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="analytics-card-body">
+                                        <h5 class="card-title">Added Value</h5>
+                                        <p class="card-text text-primary">{{ currency }}
+                                            {{ total_value_of_active_deals }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="analytics-card-body">
+                                        <h5 class="card-title">Avg. Won Deal Value</h5>
+                                        <p class="card-text text-primary">{{ currency }}
+                                            {{ avg_won_deals_value }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="analytics-card-body">
+                                        <h5 class="card-title">Avg. Sales Cycle Length</h5>
+                                        <p class="card-text text-primary">{{ avg_sales_cycle }}
+                                            days</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br clear="all">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="analytics-card-body">
+                                        <h5 class="card-title">Won Deals</h5>
+                                        <p class="card-text text-primary">{{ no_of_won_deals }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="analytics-card-body">
+                                        <h5 class="card-title">Won Values</h5>
+                                        <p class="card-text text-primary">{{ currency }}
+                                            {{ avg_own_deals }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="analytics-card-body">
+                                        <h5 class="card-title">Conversion Rate</h5>
+                                        <p class="card-text text-primary">Won:
+                                            {{ conversion_rate.won }}% - Lost:
+                                            {{ conversion_rate.lost }}%</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="analytics-card-body">
+                                        <h5 class="card-title">Top Sales Sources</h5>
+                                        <p class="card-text text-primary">
+                                            {% for key, value in top_sales_sources %}
+                                            <small>{{ value.Contact_First }}
+                                                {{ value.Contact_Last }}
+                                                -
+                                                {{ value.Lead_Referral_Source }}</small>
+                                            <br>
+                                            {% endfor %}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br clear="all">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="analytics-card-body">
+                                        <h5 class="card-title">Lost Deals</h5>
+                                        <p class="card-text text-primary">{{ no_of_lost_deals }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="analytics-card-body">
+                                        <h5 class="card-title">Lost Values</h5>
+                                        <p class="card-text text-primary">{{ lost_deal_value }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="analytics-card-body">
+                                        <h5 class="card-title">Email Sent</h5>
+                                        <p class="card-text text-primary">{{ task_completed_email }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="analytics-card-body">
+                                        <h5 class="card-title">Calls Made</h5>
+                                        <p class="card-text text-primary">{{ task_completed_phone }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br clear="all">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="analytics-card-body">
+                                        <h5 class="card-title">Meeting Attended</h5>
+                                        <p class="card-text text-primary">{{ task_completed_meeting }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="analytics-card-body">
+                                        <h5 class="card-title">Tasks Done</h5>
+                                        <p class="card-text text-primary">{{ no_of_tasks }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="analytics-card-body">
+                                        <h5 class="card-title">Contacts Bulk Uploaded</h5>
+                                        <p class="card-text text-primary">{{ contacts_bulk_uploaded }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="analytics-card-body">
+                                        <h5 class="card-title">Google Calendar Push</h5>
+                                        <p class="card-text text-primary">{{ google_calendar_push }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer small text-muted">Updated {{ "now"|date("F jS Y \\a\\t g:ia") }}</div>
+                </div>
+            </div>
+            <!-- /.container-fluid -->
+            
+        </div>
+        <!-- /.content-wrapper -->
+        {% include 'admin/copyright.html.twig' %}
+    </div>
+    <!-- /#wrapper -->
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+    {% include 'admin/footer.html.twig' %}

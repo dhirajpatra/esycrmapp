@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="esycrm registration">
+        <meta name="author" content="esycrm">
+        <meta name="google-signin-client_id" content="124746966976-h59qom8eubft27apbe8eiekf5kuvm853.apps.googleusercontent.com">
+
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
+        <title>EsyCRM - Register</title>
+
+        <!-- Custom fonts for this template-->
+        <link
+        href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
+        <!-- Custom styles for this template-->
+        <link href="/css/sb-admin.css" rel="stylesheet">
+
+    </head>
+
+    <body class="bg-dark">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    </script>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card card-register mx-auto mt-5">
+                <div class="card-header">EsyCRM - Register a Company Account</div>
+                <div class="card-body">
+                    <div id="login_result" class="alert alert-danger" role="alert">
+                        <small>Red color border are required fields</small>
+                    </div>
+                    <form class="validatedForm simple-form" action="/register" method="post">
+                        <input type="hidden" name="csrf" id="csrf" value="{{ key }}"/>
+                        <div class="form-group">
+                            <div class="form-row">
+                                <div class="col-md-8">
+                                    <input type="text" id="companyName" name="companyName" class="form-control" placeholder="Company name" required="required" autofocus="autofocus">
+                                </div>                                
+                                <div class="col-md-3">
+                                    <div class="form-label-group" data-toggle="tooltip" title="Select currency of your business">
+                                        <select id="currency" name="currency" class="form-control" required="required">
+                                            {% for currency in currencies %}
+                                                {% if currency.name == 'Euro' %}
+                                                    <option value="{{ currency.id }}" data-toggle="tooltip" title="{{ currency.name }}" selected="selected">{{ currency.symbol }} - {{ currency.name }}</option>
+                                                {% else %}
+                                                    <option value="{{ currency.id }}" data-toggle="tooltip" title="{{ currency.name }}">{{ currency.symbol }} - {{ currency.name }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <select id="industry" name="industry" class="form-control" data-toggle="tooltip" title="Company Industry" required="required">
+                                        {% for industry in industries %}
+                                            <option value="{{ industry.id }}">{{ industry.industry }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <select id="reason" name="reason" class="form-control" data-toggle="tooltip" title="Reason to join" required="required">
+                                        {% for reason in reasons %}
+                                            <option value="{{ reason.id }}">{{ reason.reason }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <input type="text" id="firstName" name="firstName" class="form-control" placeholder="First name" required="required">
+
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" id="lastName" name="lastName" class="form-control" placeholder="Last name" required="required">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <input type="email" id="inputEmail" name="inputEmail" class="form-control" placeholder="Email address" required="required">
+                                </div>    
+                                <div class="col-md-6">
+                                    <input type="checkbox" id="login_with_code" name="login_with_code" class="">Login with Code [2FA]                                    
+                                </div>                              
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <input type="password" id="inputPassword" name="inputPassword" class="form-control" placeholder="Password" required="required">
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="Confirm password" required="required">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-row">
+                                <div class="col-md-6">                                    
+                                    <input type="text" id="referral_code" name="referral_code" class="form-control" placeholder="Referral Code">
+                                </div>
+                                 <div class="col-md-6" data-hover='tooltip' title="e-Resident verification will be done in later stages. Enter only if you are an e-Resident of Estonia.">
+                                    <input type="number" id="ee_personal_code" name="ee_personal_code" minlength="11" maxlength="11" class="form-control" placeholder="E-resident Personal Code"> 
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-row">
+                                <div class="col-md-12">
+                                    <input type="submit" id="registerButton" class="btn btn-primary btn-block" value="Register">
+                                </div>
+                            </div>
+                        </div>
+                    </form>                    
+                    <div class="row text-center">
+                        <div class="col-sm-4">
+                        <a class="d-block small" href="/login"> Go to Login </a>
+                        </div>
+                        <div class="col-sm-4">
+                        <a class="d-block small" href="/forgot-password">Forgot Password?</a>
+                        </div>
+                        <div class="col-sm-4">
+                        <a class="d-block small" href="https://esycrm.com">Go to Home Page</a>
+                        </div>
+                    </div>
+                    <div class="text-center small text-danger mt-3">We use similar to bank grade highly secure login system with dynamic two way SHA256 hash system. e-Resident verification will be done in later stages. If 'Login with code' selected then login time we will send a verification code to authenticate along with username and password.</div>
+                </div>
+            </div>
+                </div>
+                
+                <div class="col-lg-3">
+                    <script data-ad-client="ca-pub-9970686429481173" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                </div>
+            </div>
+            
+        </div>       
+
+        <!-- Bootstrap core JavaScript-->
+        <script src="vendor/jquery/jquery.min.js"></script>
+        <script src="js/jquery-ui.js"></script>
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+        <!-- Core plugin JavaScript-->
+        <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+        <script src="vendor/jquery/jquery.validate.min.js"></script>
+
+        <script src="js/sb-admin.js"></script>
+    </body>
+
+</html>
