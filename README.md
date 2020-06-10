@@ -58,5 +58,16 @@ roles — a user can be either a Sales Rep or a Manager
 
 Login: email + 123456 / 12345678
 
+## how to install or start developing
 
+Previously create with full Docker but as we needed to run the application into less expensive server so we needed to convert the docker server application to direct php application
+
+### clone this repository and then change branch to booking
+
+* install PHP 7.4
+* install Mysql 5.6
+* install apache 2.4
+* install most of the PHP libraries
+* run composer.json
+* 
 
