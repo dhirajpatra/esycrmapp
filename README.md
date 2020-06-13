@@ -68,6 +68,9 @@ Previously create with full Docker but as we needed to run the application into 
 * install Mysql 5.6
 * install apache 2.4
 * install most of the PHP libraries
-* run composer.json
-* 
+* run composer install
+* change the environment variable
+* create virtual host with apache
+* run the application
+* fill the database
 

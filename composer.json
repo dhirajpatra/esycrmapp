@@ -1,12 +1,12 @@
 {
     "name": "dhirajpatra/esycrm",
     "authors": [
-    {
-        "name": "Dhiraj Patra",
-        "email": "dhiraj.patra@gmail.com"
-    }],
-    "require":
-    {
+        {
+            "name": "Dhiraj Patra",
+            "email": "dhiraj.patra@gmail.com"
+        }
+    ],
+    "require": {
         "php-di/php-di": "^6.0",
         "relay/relay": "^2.0",
         "laminas/laminas-diactoros": "^1.7",
@@ -18,12 +18,11 @@
         "phpmailer/phpmailer": "^6.1",
         "google/apiclient": "^2.0",
         "monolog/monolog": "^2.0",
-        "sendgrid/sendgrid": "~7"
+        "sendgrid/sendgrid": "~7",
+        "opis/closure": "^3.5"
     },
-    "autoload":
-    {
-        "psr-4":
-        {
+    "autoload": {
+        "psr-4": {
             "App\\": "src/"
         }
     }
