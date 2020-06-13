@@ -1,5 +1,6 @@
 <?php
-declare (strict_types = 1);
+
+declare(strict_types=1);
 
 // Tell PHP that we're using UTF-8 strings until the end of the script
 mb_internal_encoding('UTF-8');
@@ -20,11 +21,16 @@ if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER
     ini_set('session.cookie_secure', '1'); // only for https
 }
 // start application session
-session_start();
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
 date_default_timezone_set("Asia/Calcutta");
 
 # need to chage as per the host and domain
+if (!defined('HOST')) {
+    define('HOST', null);
+}
 $host = null !== HOST ? HOST : 'esycrmapp.lan';
 preg_match('/' . $host . '/', $_SERVER['HTTP_HOST'], $match);
 if (in_array($host, $match)) {
@@ -38,7 +44,7 @@ if (in_array($host, $match)) {
 
 $log_file = $_SERVER['DOCUMENT_ROOT'] . '/../log.txt';
 
-// access log for test
+// // access log for test
 // if (date('Y-m-d') > date('Y-m-d', filemtime($log_file))) {
 //     file_put_contents($log_file, "\n" . date('d-m-Y H:i:s') . ': URI: ' . $_SERVER['REQUEST_URI'] . "\t SESSION: " . json_encode($_SESSION) . "\t POST: " . json_encode($_POST) . "\t GET: " . json_encode($_GET));
 // } else {

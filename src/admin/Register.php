@@ -1,5 +1,6 @@
 <?php
-declare (strict_types = 1);
+
+declare(strict_types=1);
 
 namespace App\admin;
 
@@ -13,6 +14,7 @@ class Register
     private $dbConn;
     private $misc;
     private $log;
+    private $key;
 
     public function __construct(
         $twig
@@ -22,6 +24,11 @@ class Register
         $this->misc = new Misc();
         $this->log = new Log();
 
+        // normal login all the time
+        if (!isset($_SESSION['csrf'])) {
+            $this->key = sha1(microtime());
+            $_SESSION['csrf'] = $this->key;
+        }
     }
 
     /**
@@ -121,14 +128,12 @@ class Register
                                 // get user's last location
                                 $last_uri = '';
                                 $result_last_uri = $this->log->get_last_location();
-
                             } else {
                                 header("location: /login?error=Invalid_email_or_password_._Or_not_activated_kindly_check_your_email_and_click_on_activation_link.");
                                 exit;
                             }
                         }
                     }
-
                 } else {
                     // not for super admin
                     if ($_SESSION['user']['role_id'] != 3 && !empty($result_last_uri)) {
@@ -231,8 +236,10 @@ class Register
     public function do_registration()
     {
         try {
-            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_SESSION['csrf'])
-                && isset($_POST['csrf']) && $_SESSION['csrf'] == $_POST['csrf']) {
+            if (
+                $_SERVER["REQUEST_METHOD"] == "POST" && isset($_SESSION['csrf'])
+                && isset($_POST['csrf']) && $_SESSION['csrf'] == $_POST['csrf']
+            ) {
                 // username and password sent from form
                 $company_name = $_POST['companyName'];
                 // $company_type = $_POST['companyType'];
@@ -255,7 +262,7 @@ class Register
                 $industry = $_POST['industry'];
                 $referral_code = $_POST['referral_code'];
                 $login_with_code = isset($_POST['login_with_code']) && $_POST['login_with_code'] == 'on'
-                ? 1 : 0;
+                    ? 1 : 0;
 
                 // later need to change to email confirmation to activate
                 $status = PENDING_USER;
@@ -300,14 +307,12 @@ class Register
 
                                     $sql_update_companies = $this->dbConn->prepare("update companies set contacts_limit = contacts_limit + ?, deals_limit = deals_limit + ? where registration_id = ?");
                                     $sql_update_companies->execute(array(ADD_REFERRAL_CONTACTS_LIMIT, ADD_REFERRAL_DEALS_LIMIT, $row_referral_code['registration_id']));
-
                                 }
                                 // if not match the referral code
                             } else {
                                 $contacts_limit = CONTACTS_LIMIT;
                                 $deals_limit = DEALS_LIMIT;
                             }
-
                         } elseif (isset($_POST['ee_personal_code']) && $_POST['ee_personal_code'] != '') {
                             $ee_personal_code = $_POST['ee_personal_code'];
                             // for e-residents of estonia
@@ -371,9 +376,11 @@ class Register
                             Name_First, Name_Last, Email, Password, User_Roles, User_Status, psalt,
                             referral_code, ee_personal_code, login_with_code)
                             value(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                            $value_user = $sql_insert_user->execute(array($company_id, $first_name,
+                            $value_user = $sql_insert_user->execute(array(
+                                $company_id, $first_name,
                                 $last_name, $email, $salted_hash, $role, $status, $p_salt, $code,
-                                $ee_personal_code, $login_with_code));
+                                $ee_personal_code, $login_with_code
+                            ));
                             $new_user_id = $this->dbConn->lastInsertId();
 
                             if ($value_user === true) {
@@ -577,7 +584,6 @@ class Register
 
                         return $response;
                     }
-
                 } else {
                     $error = 'Not a valid link. Kindly contact your manager to request for support.';
 
@@ -615,7 +621,6 @@ class Register
                     // setcookie('logged_in', base64_encode($id), time() + COOKIE_SET_TIME, "/");
                     header("location: /thanks_change_password");
                     exit;
-
                 } else {
                     $error = 'Sorry your Password could not be changed. Kindly contact your Admin or our support team.';
                     $_POST = false;
@@ -679,7 +684,6 @@ class Register
 
                 if ($result) {
                     $response = $this->twig->render('thanks_unsubscription.html.twig');
-
                 } else {
                     $error = 'Not a valid link. Kindly contact your manager to request for support.';
 
@@ -688,7 +692,6 @@ class Register
 
                 return $response;
             }
-
         } catch (\Exception $exception) {
             $this->misc->log('Register' . __METHOD__, $exception);
         }

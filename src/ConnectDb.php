@@ -1,5 +1,6 @@
 <?php
-declare (strict_types = 1);
+
+declare(strict_types=1);
 
 namespace App;
 
@@ -60,8 +61,8 @@ class ConnectDb
                 self::$dbConn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
                 // set some attributes in mysql
-                // $sql_set = self::$dbConn->prepare("SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
-                // $sql_set->execute();
+                $sql_set = self::$dbConn->prepare("SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
+                $sql_set->execute();
             }
 
             // only for dev
@@ -72,7 +73,7 @@ class ConnectDb
             }
 
             return self::$dbConn;
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             echo 'Connection failed: ' . $e->getMessage();
         }
     }

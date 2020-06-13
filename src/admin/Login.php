@@ -28,10 +28,12 @@ class Login
         $this->log = new Log();
 
         // google sso login
-        if (isset($_SERVER['HTTPS']) &&
+        if (
+            isset($_SERVER['HTTPS']) &&
             ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
             isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
-            $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
+            $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'
+        ) {
             $protocol = 'https://';
         } else {
             $protocol = 'http://';
@@ -63,8 +65,8 @@ class Login
             // this required as two login form dynamically show to take email pass and take code
             // and as both form already created so session get change at new will not match
             if (!isset($_COOKIE['csrf'])) {
-                $csrf = sha1(microtime());
-                setcookie('csrf', $csrf, time() + 300);
+                // $csrf = sha1(microtime());
+                setcookie('csrf', $_SESSION['csrf'], time() + 300);
             } else {
                 $csrf = $_COOKIE['csrf'];
             }
@@ -224,7 +226,7 @@ class Login
                 $password = isset($_COOKIE["password"]) ? $_COOKIE["password"] : null;
                 $message = isset($_SESSION['message']) ? $_SESSION['message'] : null;
 
-                $response = $this->twig->render('login.html.twig', ['key' => $csrf, 'error' => $error, 'password' => $password, 'email' => $email, 'btn_login' => 'Login', 'btn_login_main' => 'Login', 'error' => $message, 'google_auth_url' => $this->google_auth_url]);
+                $response = $this->twig->render('login.html.twig', ['key' => $_SESSION['csrf'], 'error' => $error, 'password' => $password, 'email' => $email, 'btn_login' => 'Login', 'btn_login_main' => 'Login', 'error' => $message, 'google_auth_url' => $this->google_auth_url]);
 
                 return $response;
             }
@@ -241,7 +243,8 @@ class Login
         try {
             // read csrf cookie reading
             $csrf = isset($_COOKIE['csrf']) ? $_COOKIE['csrf'] : '';
-            if ($_SERVER["REQUEST_METHOD"] == "POST" && ($csrf == $_POST['csrf']) || (isset($_SESSION['csrf']) && $_SESSION['csrf'] == $_POST['csrf'])) {
+            if ($_SERVER["REQUEST_METHOD"] == "POST" && (($csrf == $_POST['csrf']) || (isset($_SESSION['csrf']) && $_SESSION['csrf'] == $_POST['csrf']))) {
+
                 // username and password sent from form
                 $email = $myusername = $_POST['inputEmail'];
                 $password = $_POST['inputPassword'];
@@ -321,21 +324,31 @@ class Login
                                         if ($count_template > 0) {
                                             while ($row_template = $sql_template->fetch()) {
                                                 $body = str_ireplace(
-                                                    '{{VERIFICATION_CODE}}', $code, $row_template['body']
+                                                    '{{VERIFICATION_CODE}}',
+                                                    $code,
+                                                    $row_template['body']
                                                 );
                                                 $body = str_ireplace(
-                                                    '{{SalesCRM}}', APP_NAME, $body
+                                                    '{{SalesCRM}}',
+                                                    APP_NAME,
+                                                    $body
                                                 );
                                                 $body = str_ireplace(
-                                                    '{{http://www.salescrm.com}}', WEBSITE_LINK, $body
+                                                    '{{http://www.salescrm.com}}',
+                                                    WEBSITE_LINK,
+                                                    $body
                                                 );
                                                 $body = str_ireplace('{{www.salescrm.com}}', WEBSITE, $body);
                                                 $body = str_ireplace('{{ENCODED_EMAIL}}', base64_encode($email), $body);
                                                 $body = str_ireplace(
-                                                    '{{COMPANY_EMAIL}}', COMPANY_EMAIL, $body
+                                                    '{{COMPANY_EMAIL}}',
+                                                    COMPANY_EMAIL,
+                                                    $body
                                                 );
                                                 $body = str_ireplace(
-                                                    '{{LOGIN_CODE_EXPIRE}}', LOGIN_CODE_EXPIRE, $body
+                                                    '{{LOGIN_CODE_EXPIRE}}',
+                                                    LOGIN_CODE_EXPIRE,
+                                                    $body
                                                 );
 
                                                 $subject = $row_template['subject'] . ' for Login on ' . APP_NAME . ' verifiction code is ' . $code;
@@ -413,8 +426,10 @@ class Login
                                 // update last logged in time
                                 $sql_logged_in = $this->dbConn->prepare('update users
                                 set last_logged_in = ?, referral_code = ? where id = ?');
-                                $sql_logged_in->execute(array(date('Y-m-d H:i:s'), $row['referral_code'],
-                                    $row['id']));
+                                $sql_logged_in->execute(array(
+                                    date('Y-m-d H:i:s'), $row['referral_code'],
+                                    $row['id'],
+                                ));
 
                                 $user = [
                                     'email' => $row['Email'],
@@ -932,7 +947,6 @@ class Login
                     $response = $this->twig->render('error_registration.html.twig');
                     return $response;
                 }
-
             } else {
                 $_POST = false;
                 $response = $this->twig->render('error_registration.html.twig');
@@ -1334,7 +1348,6 @@ class Login
                 header("location: /login?error=Invalid_email.");
                 exit;
             }
-
         } catch (\Exception $exception) {
             $this->misc->log('Login' . __METHOD__, $exception);
         }

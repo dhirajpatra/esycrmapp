@@ -70,7 +70,8 @@ Previously create with full Docker but as we needed to run the application into 
 * install most of the PHP libraries
 * run composer install
 * change the environment variable
-* create virtual host with apache
+* create virtual host [esycrmapp.lan] with apache
 * run the application
 * fill the database
+* run a query in mysql: SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
 
