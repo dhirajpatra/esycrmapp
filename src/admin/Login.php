@@ -416,7 +416,7 @@ class Login
                                     $_SESSION['user'] = [];
                                 }
                                 // for continue login
-                                setcookie("logged_in", base64_encode($row['id']), time() + COOKIE_SET_TIME, "/");
+                                setcookie("logged_in", base64_encode(strval($row['id'])), time() + COOKIE_SET_TIME, "/");
 
                                 // referral code is not there then update
                                 if ($row['referral_code'] == '') {
