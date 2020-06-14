@@ -87,14 +87,17 @@ class Misc
     {
         $file = fopen("../src/.env", "r");
         while (!feof($file)) {
-            $line = trim(fgets($file));
+            $line = fgets($file);
             if ($line != '') {
-                $line = explode('=', $line);
-                $line[1] = str_replace("'", "", $line[1]);
-                putenv("$line[0]=$line[1]");
-                if (!defined($line[0])) {
-                    define($line[0], $line[1]);
+                $line = explode('=', trim($line));
+                if (count($line) > 1) {
+                    $line[1] = str_replace("'", "", $line[1]);
+                    putenv("$line[0]=$line[1]");
+                    if (!defined($line[0])) {
+                        define($line[0], $line[1]);
+                    }
                 }
+
             }
         }
         fclose($file);

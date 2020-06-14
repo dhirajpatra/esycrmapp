@@ -1229,7 +1229,7 @@ class Login
                         $this->log->write();
 
                         // for continue login
-                        setcookie("logged_in", base64_encode($row['id']), time() + COOKIE_SET_TIME, "/");
+                        setcookie("logged_in", base64_encode(strval($row['id'])), time() + COOKIE_SET_TIME, "/");
 
                         // get user's last location
                         $last_uri = '';

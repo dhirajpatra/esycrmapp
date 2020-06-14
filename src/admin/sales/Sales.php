@@ -1004,9 +1004,9 @@ class Sales
             $sql = $this->dbConn->prepare("SELECT c.*, a.address, a.address_street1, a.address_street2, a.address_city, a.address_state, a.address_zip, a.address_country
                 from contact c
                 inner join addresses a on a.id = c.Address_Id
-                where c.Sales_Rep = ? and status = ?
+                where c.Sales_Rep = ?
                 order by c.id desc");
-            $sql->execute(array($this->loggedin_user_id, 0));
+            $sql->execute(array($this->loggedin_user_id));
             $count = $sql->rowCount();
             $final = [];
 
@@ -1042,6 +1042,7 @@ class Sales
                     or c.Contact_Middle LIKE ?
                     or c.Contact_Last LIKE ?
                     or c.Email LIKE ?)
+                    and c.status = 0
                     and c.Sales_Rep = ? order by c.id desc");
                 $sql->execute(array("%$look_up_characters%", "%$look_up_characters%", "%$look_up_characters%", "%$look_up_characters%", "%$look_up_characters%", $loggedin_user_id));
                 $count = $sql->rowCount();
@@ -1870,7 +1871,26 @@ class Sales
                         exit;
                     }
 
+                } elseif ($_POST['edit'] == 'unhide') {
+
+                    // delete contact address first
+                    // $sql_delete_address = $this->dbConn->prepare("delete from addresses where id = ?");
+                    // $address_result = $sql_delete_address->execute(array($address_id));
+
+                    // update contact as unhide 0
+                    $sql_delete = $this->dbConn->prepare("update contact set status = ? where id = ?");
+                    $result = $sql_delete->execute(array(0, $id));
+
+                    if ($result) {
+                        echo '200';
+                        exit;
+                    } else {
+                        echo '400';
+                        exit;
+                    }
+
                 }
+
             } else {
                 echo '400';
                 exit;

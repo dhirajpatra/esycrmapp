@@ -33,7 +33,13 @@
                             <tbody>
                                 {% for contact in contacts %}
                                 <tr class="table tr">
-                                    <td>{{ contact.Contact_First }} {{ contact.Contact_Last }}</td>
+                                    <td>
+                                        {% if contact.status == 1 %}
+                                        <del>{{ contact.Contact_First }} {{ contact.Contact_Last }}</del>
+                                        {% else %}
+                                            {{ contact.Contact_First }} {{ contact.Contact_Last }}
+                                        {% endif %}
+                                    </td>
                                     <td>{{ contact.Company }}</td>
                                     <td><a href="tel:+{{ contact.Phone }}" target="_blank" data-hover="tooltip" title="Click to call">{{ contact.Phone }}</a></td>
                                     <td><a href="mailto:{{ contact.Email }}" target="_blank" data-hover="tooltip" title="Click to send mail">{{ contact.Email }}</a></td>
@@ -50,6 +56,7 @@
                                             </div>
                                             <div class="text-center col-md-2">
                                                 <span class="edit-span">
+                                                {% if contact.status == 0 %}
                                                     <form method="post" name="frm_data_contact_delete" id="frm_data_contact_delete" action="/sales/contact">
                                                         <input type="hidden" name="csrf_contact_edit" id="csrf_contact_edit" value="{{ key }}" />
                                                         <input type="hidden" id="edit_contact_id" name="edit_contact_id" value="{{ contact.id }}">
@@ -57,6 +64,17 @@
                                                         <input type="hidden" id="edit" name="edit" value="delete">
                                                         <button type="submit" class="btn btn-primary"><i class="fa fa-eye-slash" data-toggle="tooltip" title="Hide"></i></button>
                                                     </form>
+                                                    {% endif %}
+
+                                                    {% if contact.status == 1 %}
+                                                    <form method="post" name="frm_data_contact_unhide" id="frm_data_contact_unhide" action="/sales/contact">
+                                                        <input type="hidden" name="csrf_contact_edit" id="csrf_contact_edit" value="{{ key }}" />
+                                                        <input type="hidden" id="edit_contact_id" name="edit_contact_id" value="{{ contact.id }}">
+                                                        <input type="hidden" id="edit_contact_address_id" name="edit_contact_address_id" value="{{ contact.Address_Id }}">
+                                                        <input type="hidden" id="edit" name="edit" value="unhide">
+                                                        <button type="submit" class="btn btn-primary"><i class="fa fa-eye" data-toggle="tooltip" title="Un-Hide"></i></button>
+                                                    </form>
+                                                    {% endif %}
                                                 </span>
                                             </div>
                                         </div>

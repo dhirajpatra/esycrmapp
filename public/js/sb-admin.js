@@ -1941,6 +1941,39 @@
     });
 
     // delete a contact along with its address
+    $(document).on('submit', "#frm_data_contact_unhide", function (event) {
+        event.preventDefault(); //prevent default action
+        var r = confirm("Are you sure to un-hide and active this contact?");
+        if (r != true) {
+            return false;
+        }
+
+        var post_url = $(this).attr("action"); //get form action url
+        var request_method = $(this).attr("method"); //get form GET/POST method
+        var form_data = $(this).serialize(); //Encode form elements for submission
+
+        $.ajax({
+            url: post_url,
+            type: request_method,
+            data: form_data,
+            cache: false,
+            processData: false,
+        }).done(function (response) { //
+            if (response == '200') {
+                // console.log('200');
+                // need to reload the page
+                location.reload();
+            } else if (response == '409') {
+                // console.log('409');
+                return false;
+            } else {
+                // console.log('400');
+                return false;
+            }
+        });
+    });
+
+    // delete a contact along with its address
     $(document).on('submit', "#frm_data_sales_task_delete", function (event) {
         event.preventDefault(); //prevent default action
         var r = confirm("Are you sure to update this task as completed?");

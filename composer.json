@@ -19,7 +19,8 @@
         "google/apiclient": "^2.0",
         "monolog/monolog": "^2.0",
         "sendgrid/sendgrid": "~7",
-        "opis/closure": "^3.5"
+        "opis/closure": "^3.5",
+        "marcocesarato/cpdo": "0.2.3.44"
     },
     "autoload": {
         "psr-4": {

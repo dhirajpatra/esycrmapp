@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "19bb90ee51b7280aebcd1d06091d370e",
+    "content-hash": "0d6b3e0257705ba91df59392bfe581fb",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -672,6 +672,47 @@
                 }
             ],
             "time": "2020-05-20T16:45:56+00:00"
+        },
+        {
+            "name": "marcocesarato/cpdo",
+            "version": "0.2.3.44",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/marcocesarato/PHP-CPDO.git",
+                "reference": "7e26d9dd9d7a355a891f76e74f44736154958ee2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/marcocesarato/PHP-CPDO/zipball/7e26d9dd9d7a355a891f76e74f44736154958ee2",
+                "reference": "7e26d9dd9d7a355a891f76e74f44736154958ee2",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-pdo": "*",
+                "php": ">=5.1.2"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.15"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "marcocesarato\\cpdo\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Marco Cesarato",
+                    "email": "cesarato.developer@gmail.com"
+                }
+            ],
+            "description": "This package can retrieve PDO query results from cache variables.  It extends the base PDO class and override some functions to handle database query execution and store the query results in variables. The class can also return query results for cached queries for previously executed queries to retrieve the results faster for repeated queries.",
+            "time": "2019-09-12T12:13:00+00:00"
         },
         {
             "name": "middlewares/fast-route",
