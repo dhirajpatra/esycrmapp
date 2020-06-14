@@ -57,6 +57,9 @@ class ConnectDb
         try {
             if (!self::$dbConn) {
                 self::$dsn = 'mysql:host=' . self::$host . ';port=' . self::$port . ';dbname=' . self::$name . ';charset=utf8mb4';
+                // self::$dbConn = CPDO::connect('mysql', self::$name, self::$host, self::$user, self::$pass);
+                // // enable cache
+                // self::$dbConn->enableCache();
                 self::$dbConn = new \PDO(self::$dsn, self::$user, self::$pass);
                 self::$dbConn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
