@@ -1910,7 +1910,7 @@
     // delete a contact along with its address
     $(document).on('submit', "#frm_data_contact_delete", function (event) {
         event.preventDefault(); //prevent default action
-        var r = confirm("Are you sure to hide this contact?");
+        var r = confirm("Are you sure to delete this contact?");
         if (r != true) {
             return false;
         }
