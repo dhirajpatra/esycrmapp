@@ -1851,12 +1851,12 @@ class Sales
 
                     if ($count == 0) {
                         // delete contact address first
-                        // $sql_delete_address = $this->dbConn->prepare("delete from addresses where id = ?");
-                        // $address_result = $sql_delete_address->execute(array($address_id));
+                        $sql_delete = $this->dbConn->prepare("delete from contact where id = ?");
+                        $result = $sql_delete->execute(array($id));
 
                         // update contact as deleted 1
-                        $sql_delete = $this->dbConn->prepare("update contact set status = ? where id = ?");
-                        $result = $sql_delete->execute(array(1, $id));
+                        // $sql_delete = $this->dbConn->prepare("update contact set status = ? where id = ?");
+                        // $result = $sql_delete->execute(array(1, $id));
 
                         if ($result) {
                             echo '200';
