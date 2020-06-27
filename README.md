@@ -1,7 +1,11 @@
-# sales_crm
-this is sales crm
+# esycrmm
+this is EsyCRM open source. This is now open source and free to use as you wish. No gurrantee or lic will come with it. Your contribute for further development of this FREE CRM which is running in https://esycrm.com with thousands of business users.
 
-## Sales CRM
+## customization for your organization
+Yes we have a remote experienced team to customized or create new module for your business any time. Kindly contact us through https://esycrm.com
+
+
+## ESY CRM
 
 Customer Relationship Management (CRM) is a system that manages customer interactions and data throughout the customer life-cycle between the customer and the company across different channels. In this tutorial, we are going to build a custom CRM in PHP, which a sales team can use to track customers through the entire sales cycle.
 
