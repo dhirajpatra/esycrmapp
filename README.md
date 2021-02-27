@@ -1,5 +1,5 @@
-# esycrmm
-this is EsyCRM open source. This is now open source and free to use as you wish. No gurrantee or lic will come with it. Your contribute for further development of this FREE CRM which is running in https://esycrm.com with thousands of business users.
+# esycrmm 
+this is EsyCRM open source. This is now open source and free to use as you wish. No gurrantee or lic will come with it. Your contribute for further development of this FREE CRM which is running in https://esycrm.com with thousands of business users. Looking for code maintainers. Kindly send me mail dhiraj.patra@gmail.com
 
 ## customization for your organization
 Yes we have a remote experienced team to customized or create new module for your business any time. Kindly contact us through https://esycrm.com
